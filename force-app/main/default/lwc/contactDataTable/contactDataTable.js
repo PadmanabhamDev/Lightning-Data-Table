@@ -27,17 +27,26 @@ export default class ContactDataTable extends LightningElement {
     connectedCallback() {
         this.getContacts();
     }
-    //this methods is called when compomnent is inserted in dom
+    /** this methods is called when compomnent is inserted in dom 
+     *  
+     * 
+     * 
+     * 
+    */
     getContacts() {
         getContact()
             .then(contacts => {
                 contacts.forEach(contact => {
+                    contact.ContactURL = '/' + contact.Id;
+                    contact.AccountURL = '/' + contact.Account?.Id
                     contact.AccountName = contact.Account?.Name;
+                    contact.Name = contact.Name;
+                    contact.Email = contact.Email;
                     contact.street = contact.MailingAddress?.street;
-                    contact.City = contact.MailingAddress?.City;
-                    contact.State = contact.MailingAddress?.State;
-                    contact.Country = contact.MailingAddress?.Country;
-                    contact.PostalCode = contact.MailingAddress?.PostalCode;
+                    contact.city = contact.MailingAddress?.city;
+                    contact.state = contact.MailingAddress?.state;
+                    contact.country = contact.MailingAddress?.country;
+                    contact.postalCode = contact.MailingAddress?.postalCode;
                 });
                 this.contacts = contacts;
                 console.log(this.contacts);
@@ -47,18 +56,72 @@ export default class ContactDataTable extends LightningElement {
             })
     }
 
-    //Table Coulns
+    /** Table Coulns
+     * Type is case sensative
+     * typeAttributes : 
+     * 
+     * 
+     */
+
     columnsData = [
-        { label: "ContactId", fieldName: "Id" },
-        { label: "Account Name", fieldName: "AccountName" },
-        { label: "Name", fieldName: "Name" },
-        { label: "Phone", fieldName: "Phone" },
-        { label: "Email", fieldName: "Email" },
-        { label: "Street", fieldName: "street" },
-        { label: "City", fieldName: "City" },
-        { label: "State", fieldName: "State" },
-        { label: "Country", fieldName: "Country" },
-        { label: "PostalCode", fieldName: "PostalCode" },
+        {
+            label: "Name",
+            fieldName: "ContactURL",
+            type: 'url',
+            typeAttributes: {
+                label: {
+                    fieldName: 'Name',
+                },
+                targets: '_blank',
+                tooltip: 'View Contact'
+            }
+        },
+        {
+            label: "Account Name",
+            fieldName: "AccountURL",
+            type: 'url',
+            typeAttributes: {
+                label: {
+                    fieldName: 'AccountName',
+                },
+                targets: '_blank',
+                tooltip: 'View Account'
+            }
+        },
+
+        {
+            label: "Phone",
+            fieldName: "Phone",
+            type: "phone"
+        }
+        ,
+        {
+            label: "Email",
+            fieldName: "Email",
+            type: "email"
+        },
+        {
+            label: "Street",
+            fieldName: "street"
+        }
+        ,
+        {
+            label: "City",
+            fieldName: "city"
+        },
+        {
+
+            label: "State",
+            fieldName: "state"
+        },
+        {
+            label: "Country",
+            fieldName: "country"
+        },
+        {
+            label: "PostalCode",
+            fieldName: "postalCode"
+        },
 
     ]
 }
