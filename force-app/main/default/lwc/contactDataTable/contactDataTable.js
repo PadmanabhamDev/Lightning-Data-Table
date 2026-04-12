@@ -6,6 +6,24 @@ export default class ContactDataTable extends LightningElement {
     contacts = [];
     contactsData = [];
 
+    /**
+     * Table Row Actions
+     */
+    rowActions = [
+        {
+            label: 'View',
+            name: 'view'
+        },
+        {
+            label: 'Edit',
+            name: 'edit'
+        },
+        {
+            label: 'Delete',
+            name: 'delete'
+        }
+    ]
+
     // @wire(getContact)
     // getContact(data,error){
     //     if(data){
@@ -28,7 +46,8 @@ export default class ContactDataTable extends LightningElement {
         this.getContacts();
     }
     /** this methods is called when compomnent is inserted in dom 
-     *  
+     *  ? is know as optional chaining 
+     * In apex known as safe navigation
      * 
      * 
      * 
@@ -59,7 +78,7 @@ export default class ContactDataTable extends LightningElement {
     /** Table Coulns
      * Type is case sensative
      * typeAttributes : 
-     * 
+     * menuAlignment ; will be right or left based on click so thats why I have 
      * 
      */
 
@@ -122,6 +141,38 @@ export default class ContactDataTable extends LightningElement {
             label: "PostalCode",
             fieldName: "postalCode"
         },
+        {
+            label: 'Action',
+            type: 'action',
+            typeAttributes: {
+                rowActions: this.rowActions,
+                menuAlignment: 'auto'
+            }
+        }
 
-    ]
+    ];
+
+    /** This method will be called row action is clicked to implement  to implement add onrowAction*/
+    handleRowAction(event) {
+        console.log('line 155');
+        //console.log(event.detail);
+        const { action, row } = event.detail;
+        console.log(row);
+        switch (action?.name) {
+            case 'view':
+                console.log('view');
+                break;
+            case 'edit':
+                console.log('edit');
+                break;
+            case 'delete':
+                console.log('delete');
+                break;
+            default:
+                break;
+        }
+
+
+
+    }
 }

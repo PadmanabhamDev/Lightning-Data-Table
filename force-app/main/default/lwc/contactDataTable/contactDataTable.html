@@ -1,5 +1,8 @@
 <template>
+    <!-- row-number-offset -->
     <div style="height: 250 px;">
-        <lightning-datatable key-field="Id" data={contacts} columns={columnsData}></lightning-datatable>
+        <lightning-datatable key-field="Id" data={contacts} columns={columnsData} hide-checkbox-column
+            show-row-number-column onrowaction={handleRowAction}>
+        </lightning-datatable>
     </div>
 </template>
