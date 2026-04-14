@@ -68,6 +68,7 @@ export default class ContactDataTable extends LightningElement {
                     contact.postalCode = contact.MailingAddress?.postalCode;
                 });
                 this.contacts = contacts;
+                this.originalContacts = contacts;
                 console.log(this.contacts);
             })
             .catch(error => {
@@ -100,7 +101,9 @@ export default class ContactDataTable extends LightningElement {
                 targets: '_blank',
                 tooltip: 'View Contact'
             },
-            sortable: true
+            sortable: true,
+            wrapText: true,//action on header
+            hideDefaultActions: true
         },
         {
             label: "Account Name",
@@ -113,48 +116,85 @@ export default class ContactDataTable extends LightningElement {
                 targets: '_blank',
                 tooltip: 'View Account'
             },
-            sortable: true
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true
         },
 
         {
             label: "Phone",
             fieldName: "Phone",
             type: "phone",
-            sortable: true
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true
         }
         ,
         {
             label: "Email",
             fieldName: "Email",
             type: "email",
-            sortable: true
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true
+        },
+        {
+            label: "Lead Source",
+            fieldName: 'LeadSource',
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true,
+            actions: [
+                { label: 'All', checked: true, name: 'all' },
+                { label: 'Web', checked: false, name: 'web' },
+                { label: 'Phone Inquiry', checked: false, name: 'Phone Inquiry' },
+                { label: 'Partner Referral', checked: false, name: 'Partner Referral' },
+                { label: 'Purchased List', checked: false, name: 'PPurchased List' },
+                { label: 'Other', checked: false, name: 'Other' },
+                { label: 'Trade Show', checked: false, name: 'Trade Show' },
+                { label: 'External Referral', checked: false, name: 'External Referral' },
+                { label: 'Partner', checked: false, name: 'Partner' },
+                { label: 'Public Relations', checked: false, name: 'Public Relations' },
+                { label: 'Word of mouth', checked: false, name: 'Word of mouth' },
+                { label: 'External Referral', checked: false, name: 'External Referral' },
+            ]
         },
         {
             label: "Street",
             fieldName: "street",
-            sortable: true
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true
         }
         ,
         {
             label: "City",
             fieldName: "city",
-            sortable: true
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true
         },
         {
 
             label: "State",
             fieldName: "state",
-            sortable: true
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true
         },
         {
             label: "Country",
             fieldName: "country",
-            sortable: true
+            sortable: true,
+            wrapText: true,
+            hideDefaultActions: true
         },
         {
             label: "PostalCode",
             fieldName: "postalCode",
-            sortable: true
+            sortable: true,
+            wrapText: true,//action on header
+            hideDefaultActions: true
         },
         {
             label: 'Action',
@@ -163,7 +203,7 @@ export default class ContactDataTable extends LightningElement {
                 rowActions: this.rowActions,
                 menuAlignment: 'auto'
             },
-            sortable: true
+            sortable: true,
         }
 
     ];
@@ -232,6 +272,28 @@ export default class ContactDataTable extends LightningElement {
         this.contacts = cloneContacts;
         this.sortedBy = sortedBy;
         this.sortedDirection = sortedDirection;
+    }
+
+    handleHeaderAction(event) {
+
+        const { action, columnDefinition } = event.detail;
+        const contactColumns = this.columnsData;
+        console.log('line 276' + JSON.stringify(contactColumns));
+        const actions = contactColumns.find(contactColumn => contactColumn.fieldName === columnDefinition.fieldName)?.actions;
+        //console.log(JSON.stringify(actions));
+        if (actions) {
+            actions.forEach(currectAction => {
+                currectAction.checked = currectAction.name === action.name;
+            });
+            this.columnsData = [...contactColumns];
+            if (action.name === 'all') {
+                this.contacts = this.originalContacts;
+            } else {
+                this.contacts = this.originalContacts.filter(contact => contact.LeadSource === action.label);
+            }
+        }
+
+
     }
 
 }
