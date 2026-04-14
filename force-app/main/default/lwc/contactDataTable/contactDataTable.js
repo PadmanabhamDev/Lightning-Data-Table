@@ -75,10 +75,16 @@ export default class ContactDataTable extends LightningElement {
             })
     }
 
+    /** sorting Attributes */
+    sortedBy = 'Name';
+    sortedDirection = 'asc';
+    defaultSortDirection = 'asc';
+
     /** Table Coulns
      * Type is case sensative
      * typeAttributes : 
      * menuAlignment ; will be right or left based on click so thats why I have 
+     * 
      * 
      */
 
@@ -93,7 +99,8 @@ export default class ContactDataTable extends LightningElement {
                 },
                 targets: '_blank',
                 tooltip: 'View Contact'
-            }
+            },
+            sortable: true
         },
         {
             label: "Account Name",
@@ -105,41 +112,49 @@ export default class ContactDataTable extends LightningElement {
                 },
                 targets: '_blank',
                 tooltip: 'View Account'
-            }
+            },
+            sortable: true
         },
 
         {
             label: "Phone",
             fieldName: "Phone",
-            type: "phone"
+            type: "phone",
+            sortable: true
         }
         ,
         {
             label: "Email",
             fieldName: "Email",
-            type: "email"
+            type: "email",
+            sortable: true
         },
         {
             label: "Street",
-            fieldName: "street"
+            fieldName: "street",
+            sortable: true
         }
         ,
         {
             label: "City",
-            fieldName: "city"
+            fieldName: "city",
+            sortable: true
         },
         {
 
             label: "State",
-            fieldName: "state"
+            fieldName: "state",
+            sortable: true
         },
         {
             label: "Country",
-            fieldName: "country"
+            fieldName: "country",
+            sortable: true
         },
         {
             label: "PostalCode",
-            fieldName: "postalCode"
+            fieldName: "postalCode",
+            sortable: true
         },
         {
             label: 'Action',
@@ -147,7 +162,8 @@ export default class ContactDataTable extends LightningElement {
             typeAttributes: {
                 rowActions: this.rowActions,
                 menuAlignment: 'auto'
-            }
+            },
+            sortable: true
         }
 
     ];
@@ -171,8 +187,51 @@ export default class ContactDataTable extends LightningElement {
             default:
                 break;
         }
-
-
-
     }
+
+    sortBy(field, reverse) {
+        return (a, b) => {
+            let aVal = this.primer(field, a);
+            let bVal = this.primer(field, b);
+
+            // handle undefined/null
+            aVal = aVal || '';
+            bVal = bVal || '';
+
+            if (aVal === bVal) return 0;
+            return reverse * (aVal > bVal ? 1 : -1);
+        };
+    }
+    /**
+     * a and b -> contact records
+     * >
+     */
+
+    // * Helper method for sortBy method
+    primer(field, record) {
+        let returnValue;
+        switch (field) {
+            case 'ContactURL':
+                returnValue = record['Name'];
+                break;
+            case 'AccountURL':
+                returnValue = record['AccountName'];
+                break;
+            default:
+                returnValue = record[field];
+                break;
+        }
+        return returnValue;
+    }
+
+    handleSortAction(event) {
+        console.log(event.detail);
+        const { fieldName: sortedBy, sortDirection: sortedDirection } = event.detail;
+        const cloneContacts = [...this.contacts];//spread operator which will help to copy
+        cloneContacts.sort(this.sortBy(sortedBy, sortedDirection === 'asc' ? 1 : -1));
+        this.contacts = cloneContacts;
+        this.sortedBy = sortedBy;
+        this.sortedDirection = sortedDirection;
+    }
+
 }

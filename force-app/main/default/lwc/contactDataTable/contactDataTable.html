@@ -2,7 +2,8 @@
     <!-- row-number-offset -->
     <div style="height: 250 px;">
         <lightning-datatable key-field="Id" data={contacts} columns={columnsData} hide-checkbox-column
-            show-row-number-column onrowaction={handleRowAction}>
+            show-row-number-column onrowaction={handleRowAction} sorted-by={sortedBy} sorted-direction={sortedDirection}
+            default-sort-direction={defaultSortDirection} onsort={handleSortAction}>
         </lightning-datatable>
     </div>
 </template>
